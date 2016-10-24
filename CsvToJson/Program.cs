@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,8 +24,7 @@ namespace CsvToJson
                 var lineElements = l.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
                 return new Place
                 {
-                    Name = lineElements[1].Trim(),
-                    Type = lineElements[4].Trim(),
+                    Name = $"{lineElements[1].Trim()} ({lineElements[4].Trim()})",
                     Location = $"{lineElements[6].Trim()}, {lineElements[7].Trim()}",
                     Lat = Convert.ToDouble(lineElements[8].Trim(), CultureInfo.InvariantCulture),
                     Long = Convert.ToDouble(lineElements[9].Trim(), CultureInfo.InvariantCulture)
@@ -43,8 +43,7 @@ namespace CsvToJson
                 var lineElements = l.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
                 return new Place
                 {
-                    Name = lineElements[2].Trim(),
-                    Type = lineElements[6].Trim(),
+                    Name = $"{lineElements[2].Trim()} ({lineElements[6].Trim()})",
                     Location = lineElements[9].Trim(),
                     Lat = Convert.ToDouble(lineElements[12].Trim(), CultureInfo.InvariantCulture),
                     Long = Convert.ToDouble(lineElements[13].Trim(), CultureInfo.InvariantCulture)
@@ -52,13 +51,15 @@ namespace CsvToJson
             }).ToList();
 
             Console.WriteLine($"{worldPlaces.Count} objects created from verden.txt.");
-            Console.WriteLine("Concatinating and sorting places.");
+            Console.WriteLine("Concatinating, sorting and removing duplicates.");
 
             var places = norwayPlaces
                 .Concat(worldPlaces)
+                .Distinct(new PlaceComparer())
                 .OrderBy(p => p.Name)
                 .ToArray();
 
+            Console.WriteLine($"List now contains {places.Length} places");
             Console.WriteLine("Creating json file");
 
             var jsonString = JsonConvert.SerializeObject(places);
@@ -66,16 +67,31 @@ namespace CsvToJson
 
             Console.WriteLine("Json file created. Press any key to exit.");
 
-            Console.Read();
+            Console.ReadKey();
         }
 
         private class Place
         {
             public string Name { get; set; }
-            public string Type { get; set; }
             public string Location { get; set; }
             public double Lat { get; set; }
             public double Long { get; set; }
+        }
+
+        private class PlaceComparer : IEqualityComparer<Place>
+        {
+            public bool Equals(Place x, Place y)
+            {
+                return x.Name == y.Name
+                       && x.Location == y.Location
+                       && x.Lat == y.Lat
+                       && x.Long == y.Long;
+            }
+
+            public int GetHashCode(Place place)
+            {
+                return $"{place.Name}{place.Location}{place.Lat}{place.Long}".GetHashCode();
+            }
         }
 
         // Columns in norge.txt:
