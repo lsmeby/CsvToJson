@@ -33,7 +33,7 @@ namespace CsvToJson
 
             Console.WriteLine("Creating json file");
 
-            var jsonString = JsonConvert.SerializeObject(moonIlluminations);
+            var jsonString = JsonConvert.SerializeObject(moonIlluminations, new JsonSerializerSettings {DateTimeZoneHandling = DateTimeZoneHandling.Utc});
             File.WriteAllText("moon2017.json", jsonString, Encoding.UTF8);
         }
 
