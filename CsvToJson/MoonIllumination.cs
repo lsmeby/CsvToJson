@@ -9,11 +9,13 @@ namespace CsvToJson
 {
     internal class MoonIllumination
     {
+        private const string FileName = "moon_2017.txt";
+
         public static void GenerateMoonIlluminationJson()
         {
-            Console.WriteLine("Reading moon_2017.txt");
+            Console.WriteLine($"Reading {FileName}");
 
-            var illuminationLines = File.ReadAllLines("moon_2017.txt", Encoding.UTF8).ToList();
+            var illuminationLines = File.ReadAllLines(FileName, Encoding.UTF8).ToList();
 
             Console.WriteLine($"Read {illuminationLines.Count} lines from file. Converting to objects.");
 
@@ -29,12 +31,12 @@ namespace CsvToJson
                 };
             }).ToArray();
 
-            Console.WriteLine($"{moonIlluminations.Length} objects created from moon_2017.txt.");
+            Console.WriteLine($"{moonIlluminations.Length} objects created from {FileName}.");
 
             Console.WriteLine("Creating json file");
 
             var jsonString = JsonConvert.SerializeObject(moonIlluminations, new JsonSerializerSettings {DateTimeZoneHandling = DateTimeZoneHandling.Utc});
-            File.WriteAllText("moon2017.json", jsonString, Encoding.UTF8);
+            File.WriteAllText("moon_illumination_2017.json", jsonString, Encoding.UTF8);
         }
 
         private class MoonIlluminationDto

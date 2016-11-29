@@ -8,11 +8,13 @@ namespace CsvToJson
 {
     internal class Days
     {
+        private const string FileName = "dager2017_utf-8.txt";
+
         public static void GenerateDaysJson()
         {
-            Console.WriteLine("Reading dager2017_utf-8.txt");
+            Console.WriteLine($"Reading {FileName}");
 
-            var daysLines = File.ReadAllLines("dager2017_utf-8.txt", Encoding.UTF8).ToList();
+            var daysLines = File.ReadAllLines(FileName, Encoding.UTF8).ToList();
 
             Console.WriteLine($"Read {daysLines.Count} lines from file. Converting to objects.");
 
@@ -27,12 +29,12 @@ namespace CsvToJson
                 };
             }).ToArray();
 
-            Console.WriteLine($"{days.Length} objects created from dager2017_utf-8.txt.");
+            Console.WriteLine($"{days.Length} objects created from {FileName}.");
 
             Console.WriteLine("Creating json file");
 
             var jsonString = JsonConvert.SerializeObject(days);
-            File.WriteAllText("days2017.json", jsonString, Encoding.UTF8);
+            File.WriteAllText("days_2017.json", jsonString, Encoding.UTF8);
         }
 
         private class DayToRemember

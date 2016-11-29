@@ -10,11 +10,14 @@ namespace CsvToJson
 {
     internal class Places
     {
+        private const string FileName1 = "norge.txt";
+        private const string FileName2 = "verden.txt";
+
         public static void GeneratePlacesJson()
         {
-            Console.WriteLine("Reading norge.txt");
+            Console.WriteLine($"Reading {FileName1}");
 
-            var norwayLines = File.ReadAllLines("norge.txt", Encoding.UTF8).Skip(1).ToList();
+            var norwayLines = File.ReadAllLines(FileName1, Encoding.UTF8).Skip(1).ToList();
 
             Console.WriteLine($"Read {norwayLines.Count} lines from file. Converting to objects.");
 
@@ -30,10 +33,10 @@ namespace CsvToJson
                 };
             }).ToList();
 
-            Console.WriteLine($"{norwayPlaces.Count} objects created from norway.txt.");
-            Console.WriteLine("Reading verden.txt");
+            Console.WriteLine($"{norwayPlaces.Count} objects created from {FileName1}.");
+            Console.WriteLine($"Reading {FileName2}");
 
-            var worldLines = File.ReadAllLines("verden.txt", Encoding.UTF8).Skip(1).ToList();
+            var worldLines = File.ReadAllLines(FileName2, Encoding.UTF8).Skip(1).ToList();
 
             Console.WriteLine($"Read {worldLines.Count} lines from file. Converting  to objects.");
 
@@ -49,7 +52,7 @@ namespace CsvToJson
                 };
             }).ToList();
 
-            Console.WriteLine($"{worldPlaces.Count} objects created from verden.txt.");
+            Console.WriteLine($"{worldPlaces.Count} objects created from {FileName2}.");
             Console.WriteLine("Concatinating, sorting and removing duplicates.");
 
             var places = norwayPlaces
